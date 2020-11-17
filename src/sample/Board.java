@@ -34,9 +34,9 @@ public class Board extends Parent{
 
     public Board(boolean enemy, EventHandler<? super MouseEvent> handler){
         this.enemy=enemy;
-        for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
             HBox row = new HBox();
-            for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
                 Cell c = new Cell(x, y, this);
                 c.setOnMouseClicked(handler);
                 row.getChildren().add(c);
@@ -65,13 +65,13 @@ public class Board extends Parent{
         if (goesin) {
             int length = ship.type;
             places[times][0]= times+1;
-            places[times][1]= y;
-            places[times][2]= x;
+            places[times][1]= x;
+            places[times][2]= y;
             if (ship.vertical) places[times][3]= 2;
             else places[times][3]=1;
             times++;
 
-            if (ship.vertical) {
+            if (!ship.vertical) {
                 for (int i = y; i < y + length; i++) {
                     Cell cell = getCell(x, i);
                     cell.ship = ship;
@@ -99,7 +99,7 @@ public class Board extends Parent{
     }
 
     public Cell getCell(int x, int y){
-        return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
+        return (Cell)((HBox)rows.getChildren().get(x)).getChildren().get(y);
     }
 
     private Cell[] getNeighbors(int x, int y){
@@ -124,7 +124,7 @@ public class Board extends Parent{
     private boolean canPlaceShip(Ship ship, int x, int y){
         int length = ship.type;
 
-        if (ship.vertical) {
+        if (!ship.vertical) {
             for (int i = y; i < y + length; i++) {
                 if (!isValidPoint(x, i)){
                     throw new OversizeException("The ship must be inside table limits");
@@ -197,32 +197,106 @@ public class Board extends Parent{
 
         public boolean shoot(){
             wasShot=true;
-            totalshots--;
+            board.totalshots--;
             etotalshots.set(board.totalshots);
             setFill(Color.BLACK);
+           // System.out.println(board);
+
             if (ship != null){
-                if (places[0][1] ==  y && places[0][3] == 1 && places[0][2] <= x && places[0][2]+ 1 >= x ) points= points + 350;
-                if (places[1][1] ==  y && places[1][3] == 1 && places[1][2] <= x && places[1][2]+ 2 >= x ) points= points + 250;
-                if (places[2][1] ==  y && places[2][3] == 1 && places[2][2] <= x && places[2][2]+ 2 >= x ) points= points + 100;
-                if (places[3][1] ==  y && places[3][3] == 1 && places[3][2] <= x && places[3][2]+ 3 >= x ) points= points + 100;
-                if (places[4][1] ==  y && places[0][3] == 1 && places[4][2] <= x && places[4][2]+ 4 >= x ) points= points + 50;
-                if (places[0][1] ==  x && places[0][3] == 2 && places[0][2] <= y && places[0][2]+ 1 >= y ) points= points + 350;
-                if (places[1][1] ==  x && places[1][3] == 2 && places[1][2] <= y && places[1][2]+ 2 >= y ) points= points + 250;
-                if (places[2][1] ==  x && places[2][3] == 2 && places[2][2] <= y && places[2][2]+ 2 >= y ) points= points + 100;
-                if (places[3][1] ==  x && places[3][3] == 2 && places[3][2] <= y && places[3][2]+ 3 >= y ) points= points + 100;
-                if (places[4][1] ==  x && places[0][3] == 2 && places[4][2] <= y && places[4][2]+ 4 >= y ) points= points +  50;
-                epoints.set(board.points);
+                /*System.out.println(board + " hit something at x: " + x + " and y: " + y);
                 for(int i=0 ; i<=4 ; i++) {
                     System.out.println();
                     for (int j = 0; j <= 3; j++)
-                        System.out.print(places[i][j]);
+                        System.out.print(board.places[i][j]);
+                }*/
+                if (board.places[0][1] ==  x && board.places[0][3] == 1 && board.places[0][2] <= y && board.places[0][2]+ 4 >= y ){
+                    board.points= board.points + 350;
+                    System.out.println("Scored 350 points");
                 }
+                if (board.places[1][1] ==  x && board.places[1][3] == 1 && board.places[1][2] <= y && board.places[1][2]+ 3 >= y ){
+                    board.points= board.points + 250;
+                    System.out.println("Scored 250 points");
+
+                }
+                if (board.places[2][1] ==  x && board.places[2][3] == 1 && board.places[2][2] <= y && board.places[2][2]+ 2 >= y ){
+                    board.points= board.points + 100;
+                    System.out.println("Scored 100 points");
+
+                }
+                if (board.places[3][1] ==  x && board.places[3][3] == 1 && board.places[3][2] <= y && board.places[3][2]+ 2 >= y ){
+                    board.points= board.points + 100;
+                    System.out.println("Scored 100 points");
+
+                }
+                if (board.places[4][1] ==  x && board.places[4][3] == 1 && board.places[4][2] <= y && board.places[4][2]+ 1 >= y ){
+                    board.points= board.points + 50;
+                    System.out.println("Scored 50 points");
+
+                }
+                if (board.places[0][2] ==  y && board.places[0][3] == 2 && board.places[0][1] <= x && board.places[0][1]+ 4 >= x ) {
+                    board.points= board.points + 350;
+                    System.out.println("Scored 350 points");
+
+                }
+                if (board.places[1][2] ==  y && board.places[1][3] == 2 && board.places[1][1] <= x && board.places[1][1]+ 3 >= x ){
+                    board.points= board.points + 250;
+                    System.out.println("Scored 250 points");
+
+                }
+                if (board.places[2][2] ==  y && board.places[2][3] == 2 && board.places[2][1] <= x && board.places[2][1]+ 2 >= x ){
+                    board.points= board.points + 100;
+                    System.out.println("Scored 100 points");
+
+                }
+                if (board.places[3][2] ==  y && board.places[3][3] == 2 && board.places[3][1] <= x && board.places[3][1]+ 2 >= x ){
+                    board.points= board.points + 100;
+                    System.out.println("Scored 100 points");
+
+                }
+                if (board.places[4][2] ==  y && board.places[4][3] == 2 && board.places[4][1] <= x && board.places[4][1]+ 1 >= x ){
+                    board.points= board.points + 50;
+                    System.out.println("Scored 50 points");
+
+                }
+                epoints.set(board.points);
+
                 ship.hit();
                 shots++;
                 eshots.set(board.shots);
                 setFill(Color.RED);
                 if (!ship.isAlive()){
+                    if (board.places[2][1] ==  x && board.places[2][3] == 1 && board.places[2][2] <= y && board.places[2][2]+ 2 >= y ){
+                        board.points= board.points + 250;
+                        System.out.println("Bonus! Scored 250 points");
+                    }
+                    if (board.places[1][1] ==  x && board.places[1][3] == 1 && board.places[1][2] <= y && board.places[1][2]+ 3 >= y ){
+                        board.points= board.points + 500;
+                        System.out.println("Bonus! Scored 500 points");
+
+                    }
+                    if (board.places[0][1] ==  x && board.places[0][3] == 1 && board.places[0][2] <= y && board.places[0][2]+ 4 >= y ){
+                        board.points= board.points + 1000;
+                        System.out.println("Bonus! Scored 1000 points");
+
+                    }
+
+                    if (board.places[2][2] ==  y && board.places[2][3] == 2 && board.places[2][1] <= x && board.places[2][1]+ 2 >= x ){
+                        board.points= board.points + 250;
+                        System.out.println("Bonus! Scored 250 points");
+
+                    }
+                    if (board.places[1][2] ==  y && board.places[1][3] == 2 && board.places[1][1] <= x && board.places[1][1]+ 3 >= x ){
+                        board.points= board.points + 500;
+                        System.out.println("Bonus! Scored 500 points");
+
+                    }
+                    if (board.places[0][2] ==  y && board.places[0][3] == 2 && board.places[0][1] <= x && board.places[0][1]+ 4 >= x ){
+                        board.points= board.points + 1000;
+                        System.out.println("Bonus! Scored 1000 points");
+
+                    }
                     board.ships--;
+                    epoints.set(board.points);
                     eships.set(board.ships);
                 }
                 return true;

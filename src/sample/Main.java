@@ -230,6 +230,8 @@ public class Main extends Application {
                 else type--;
             }
         }
+        //System.out.println("Player board name: " + playerBoard);
+        //System.out.println("Computer board name: " + enemyBoard);
 
         running = true;
     }
