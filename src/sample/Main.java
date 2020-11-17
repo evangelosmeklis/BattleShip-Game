@@ -18,6 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -31,7 +32,7 @@ public class Main extends Application {
 
     private boolean running = false;
     private Board enemyBoard, playerBoard;
-
+    public boolean finished = false;
     private int shipsToPlace = 5;
     public int twice2=0;
     public int start=0;
@@ -73,6 +74,33 @@ public class Main extends Application {
             }
         };
 
+        EventHandler<ActionEvent> event3 = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                StackPane root2 = new StackPane();
+                Label label = new Label("Your are now in the second form");
+
+                TilePane pane = new TilePane();
+                for (int x = 0; x < enemyBoard.states.length; x++){
+                        Label label1 = new Label(enemyBoard.states[x][0] + " state is: " + enemyBoard.states[x][1]);
+                        pane.getChildren().add(label1);
+                }
+
+                root2.getChildren().add(label);
+                Scene secondScene = new Scene(pane, 500,500);
+                Stage newstage = new Stage();
+                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+                newstage.setTitle("Pop Up Window Enemy Ships State");
+                newstage.setX(primaryScreenBounds.getMinX());
+                newstage.setY(primaryScreenBounds.getMinY());
+                newstage.setWidth(primaryScreenBounds.getWidth()-400);
+                newstage.setHeight(primaryScreenBounds.getHeight()-100);
+                newstage.setScene(secondScene);
+                newstage.setResizable(false);
+                newstage.show();
+            }
+        };
+
         menuItem1.setOnAction(event1);
         menuItem3.setOnAction(event2);
 
@@ -93,6 +121,7 @@ public class Main extends Application {
         menu2.getItems().add(menuItem22);
         menu2.getItems().add(menuItem23);
 
+        menuItem21.setOnAction(event3);
 
 
         menuBar.getMenus().add(menu1);
@@ -109,17 +138,24 @@ public class Main extends Application {
             if (first == 0 && (int)Math.round(Math.random()) ==0){
                 first++;
             }
-            if (first > 0) {
+            if (first > 0 && finished == false) {
                 Cell cell = (Cell) event.getSource();
                 if (cell.wasShot)
                     return;
 
                 enemyTurn = !cell.shoot();
-                enemyTurn = true;
+                if (enemyBoard.totalshots>40) enemyTurn = false;
+                else enemyTurn = true;
 
-                if (enemyBoard.ships == 0) {
+                if (enemyBoard.ships == 0 || (playerBoard.totalshots<=0 && enemyBoard.totalshots<=0 && playerBoard.points<enemyBoard.points)) {
+                    finished = true;
                     System.out.println("YOU WIN");
                     winner.set("PLAYER WINS");
+                }
+                if (enemyBoard.ships == 0 || (playerBoard.totalshots<=0 && enemyBoard.totalshots<=0 && playerBoard.points>enemyBoard.points)) {
+                    finished= true;
+                    System.out.println("YOU LOSE");
+                    winner.set("COMPUTER WINS");
                 }
             }
             if (enemyTurn)
@@ -199,7 +235,7 @@ public class Main extends Application {
 
     private void enemyMove() {
         first++;
-        while (enemyTurn) {
+        while (enemyTurn && finished ==false) {
             int x = random.nextInt(10);
             int y = random.nextInt(10);
 
@@ -208,11 +244,20 @@ public class Main extends Application {
                 continue;
 
             enemyTurn = cell.shoot();
-            enemyTurn = false;
+            if (playerBoard.totalshots>40) enemyTurn = true;
+            else enemyTurn=false;
+            System.out.println(playerBoard.totalshots);
+            System.out.println(enemyBoard.totalshots);
 
-            if (playerBoard.ships == 0) {
+            if (playerBoard.ships == 0 || (playerBoard.totalshots<=0 && enemyBoard.totalshots<=0 && playerBoard.points>enemyBoard.points) ) {
+                finished=true;
                 System.out.println("YOU LOSE");
                 winner.set("COMPUTER WINS");
+            }
+            if (playerBoard.ships == 0 || (playerBoard.totalshots<=0 && enemyBoard.totalshots<=0 && playerBoard.points<enemyBoard.points) ) {
+                finished=true;
+                System.out.println("YOU WIN");
+                winner.set("PLAYER WINS");
             }
         }
     }

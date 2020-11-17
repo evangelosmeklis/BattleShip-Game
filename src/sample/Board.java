@@ -29,11 +29,23 @@ public class Board extends Parent{
     IntegerProperty epoints = new SimpleIntegerProperty(points);
 
     public int[][] places = new int[5][4];
+    public String[][] states = new String[5][2];
+
 
 
 
     public Board(boolean enemy, EventHandler<? super MouseEvent> handler){
         this.enemy=enemy;
+        states[0][0] = "Carrier";
+        states[1][0] = "Battleship";
+        states[2][0] = "Cruiser";
+        states[3][0] = "Submarine";
+        states[4][0] = "Destroyer";
+
+
+        for (int t = 0 ; t < 5 ;  t++ ){
+            states[t][1] = "Intact";
+        }
         for (int x = 0; x < 10; x++) {
             HBox row = new HBox();
             for (int y = 0; y < 10; y++) {
@@ -209,52 +221,63 @@ public class Board extends Parent{
                     for (int j = 0; j <= 3; j++)
                         System.out.print(board.places[i][j]);
                 }*/
+
                 if (board.places[0][1] ==  x && board.places[0][3] == 1 && board.places[0][2] <= y && board.places[0][2]+ 4 >= y ){
                     board.points= board.points + 350;
+                    states[0][1] = "Injured";
                     System.out.println("Scored 350 points");
                 }
                 if (board.places[1][1] ==  x && board.places[1][3] == 1 && board.places[1][2] <= y && board.places[1][2]+ 3 >= y ){
                     board.points= board.points + 250;
+                    states[1][1] = "Injured";
                     System.out.println("Scored 250 points");
 
                 }
                 if (board.places[2][1] ==  x && board.places[2][3] == 1 && board.places[2][2] <= y && board.places[2][2]+ 2 >= y ){
                     board.points= board.points + 100;
+                    states[2][1] = "Injured";
                     System.out.println("Scored 100 points");
 
                 }
                 if (board.places[3][1] ==  x && board.places[3][3] == 1 && board.places[3][2] <= y && board.places[3][2]+ 2 >= y ){
                     board.points= board.points + 100;
+                    states[3][1] = "Injured";
                     System.out.println("Scored 100 points");
 
                 }
                 if (board.places[4][1] ==  x && board.places[4][3] == 1 && board.places[4][2] <= y && board.places[4][2]+ 1 >= y ){
                     board.points= board.points + 50;
+                    states[4][1] = "Injured";
                     System.out.println("Scored 50 points");
 
                 }
                 if (board.places[0][2] ==  y && board.places[0][3] == 2 && board.places[0][1] <= x && board.places[0][1]+ 4 >= x ) {
                     board.points= board.points + 350;
+                    states[0][1] = "Injured";
                     System.out.println("Scored 350 points");
 
                 }
                 if (board.places[1][2] ==  y && board.places[1][3] == 2 && board.places[1][1] <= x && board.places[1][1]+ 3 >= x ){
                     board.points= board.points + 250;
+                    states[1][1] = "Injured";
                     System.out.println("Scored 250 points");
 
                 }
                 if (board.places[2][2] ==  y && board.places[2][3] == 2 && board.places[2][1] <= x && board.places[2][1]+ 2 >= x ){
                     board.points= board.points + 100;
+                    states[2][1] = "Injured";
                     System.out.println("Scored 100 points");
 
                 }
                 if (board.places[3][2] ==  y && board.places[3][3] == 2 && board.places[3][1] <= x && board.places[3][1]+ 2 >= x ){
                     board.points= board.points + 100;
+                    states[3][1] = "Injured";
                     System.out.println("Scored 100 points");
 
                 }
                 if (board.places[4][2] ==  y && board.places[4][3] == 2 && board.places[4][1] <= x && board.places[4][1]+ 1 >= x ){
                     board.points= board.points + 50;
+                    states[4][1] = "Injured";
                     System.out.println("Scored 50 points");
 
                 }
@@ -268,31 +291,42 @@ public class Board extends Parent{
                     if (board.places[2][1] ==  x && board.places[2][3] == 1 && board.places[2][2] <= y && board.places[2][2]+ 2 >= y ){
                         board.points= board.points + 250;
                         System.out.println("Bonus! Scored 250 points");
+                        states[2][1] = "Sunk";
+
                     }
                     if (board.places[1][1] ==  x && board.places[1][3] == 1 && board.places[1][2] <= y && board.places[1][2]+ 3 >= y ){
                         board.points= board.points + 500;
                         System.out.println("Bonus! Scored 500 points");
+                        states[1][1] = "Sunk";
+
 
                     }
                     if (board.places[0][1] ==  x && board.places[0][3] == 1 && board.places[0][2] <= y && board.places[0][2]+ 4 >= y ){
                         board.points= board.points + 1000;
                         System.out.println("Bonus! Scored 1000 points");
+                        states[0][1] = "Sunk";
+
 
                     }
 
                     if (board.places[2][2] ==  y && board.places[2][3] == 2 && board.places[2][1] <= x && board.places[2][1]+ 2 >= x ){
                         board.points= board.points + 250;
                         System.out.println("Bonus! Scored 250 points");
+                        states[2][1] = "Sunk";
+
 
                     }
                     if (board.places[1][2] ==  y && board.places[1][3] == 2 && board.places[1][1] <= x && board.places[1][1]+ 3 >= x ){
                         board.points= board.points + 500;
                         System.out.println("Bonus! Scored 500 points");
+                        states[1][1] = "Sunk";
+
 
                     }
                     if (board.places[0][2] ==  y && board.places[0][3] == 2 && board.places[0][1] <= x && board.places[0][1]+ 4 >= x ){
                         board.points= board.points + 1000;
                         System.out.println("Bonus! Scored 1000 points");
+                        states[0][1] = "Sunk";
 
                     }
                     board.ships--;
