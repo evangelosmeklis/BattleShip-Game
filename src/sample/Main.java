@@ -107,23 +107,39 @@ public class Main extends Application {
                 StackPane root2 = new StackPane();
                 Label label = new Label("Your are now in the second form");
 
-                TilePane pane = new TilePane();
-                for (int x = 0; x < enemyBoard.shotsfired.length; x++){
-                    String res = "Not Available";
-                    if (enemyBoard.shotsfired[x][3] == 5) res = "Carrier";
-                    if (enemyBoard.shotsfired[x][3] == 4) res = "Battleship";
-                    if (enemyBoard.shotsfired[x][3] == 32) res = "Cruiser";
-                    if (enemyBoard.shotsfired[x][3] == 31) res = "Submarine";
-                    if (enemyBoard.shotsfired[x][3] == 2) res = "Destroyer";
-                    String res1 = "Not Available";
-                    if (enemyBoard.shotsfired[x][2] == 0) res1 = "Not hit";
-                    if (enemyBoard.shotsfired[x][2] == 1) res1 = "Hit";
-                    Label label1 = new Label("Player shots cell with x: " + enemyBoard.shotsfired[x][0] + " and y: " + enemyBoard.shotsfired[x][1] + " with result: " + res1 + " and ship type: " + res  );
-                    pane.getChildren().add(label1);
+                TilePane pane1 = new TilePane();
+                TilePane pane2 = new TilePane();
+                TilePane pane3 = new TilePane();
+                TilePane pane4 = new TilePane();
+                TilePane pane5 = new TilePane();
+                int tempor = 0;
+
+                int st=0;
+                if (playerBoard.efcounter.get() < 5 ) st = 0;
+                else st= playerBoard.efcounter.get();
+                for (int x = st; x < enemyBoard.efcounter.get(); x++){
+                        String res = "Not Available";
+                        if (enemyBoard.shotsfired[x][3] == 5) res = "Carrier";
+                        if (enemyBoard.shotsfired[x][3] == 4) res = "Battleship";
+                        if (enemyBoard.shotsfired[x][3] == 32) res = "Cruiser";
+                        if (enemyBoard.shotsfired[x][3] == 31) res = "Submarine";
+                        if (enemyBoard.shotsfired[x][3] == 2) res = "Destroyer";
+                        String res1 = "Not Available";
+                        if (enemyBoard.shotsfired[x][2] == 0) res1 = "Not hit";
+                        if (enemyBoard.shotsfired[x][2] == 1) res1 = "Hit";
+                        Label label1 = new Label("Player shots cell with x: " + enemyBoard.shotsfired[x][0] + " and y: " + enemyBoard.shotsfired[x][1] + " with result: " + res1 + " and ship type: " + res  );
+                        if (tempor == 0) pane1.getChildren().add(label1);
+                        if (tempor == 1) pane2.getChildren().add(label1);
+                        if (tempor == 2) pane3.getChildren().add(label1);
+                        if (tempor == 3) pane4.getChildren().add(label1);
+                        if (tempor == 4) pane5.getChildren().add(label1);
+                        tempor++;
                 }
 
                 root2.getChildren().add(label);
-                Scene secondScene = new Scene(pane, 500,500);
+                VBox vboxvag = new VBox(100, pane1,pane2,pane3,pane4,pane5);
+
+                Scene secondScene = new Scene(vboxvag, 500,500);
                 Stage newstage = new Stage();
                 Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
                 newstage.setTitle("Pop Up Window Player Shots");
@@ -143,17 +159,42 @@ public class Main extends Application {
                 StackPane root2 = new StackPane();
                 Label label = new Label("Your are now in the second form");
 
-                TilePane pane = new TilePane();
-                for (int x = 0; x < playerBoard.states.length; x++){
-                    Label label1 = new Label(playerBoard.states[x][0] + " state is: " + playerBoard.states[x][1]);
-                    pane.getChildren().add(label1);
+                TilePane pane1 = new TilePane();
+                TilePane pane2 = new TilePane();
+                TilePane pane3 = new TilePane();
+                TilePane pane4 = new TilePane();
+                TilePane pane5 = new TilePane();
+                int tempor = 0;
+
+                int st=0;
+                if (playerBoard.efcounter.get() < 5 ) st = 0;
+                else st= playerBoard.efcounter.get();
+                for (int x = st; x < playerBoard.efcounter.get(); x++){
+                    String res = "Not Available";
+                    if (playerBoard.shotsfired[x][3] == 5) res = "Carrier";
+                    if (playerBoard.shotsfired[x][3] == 4) res = "Battleship";
+                    if (playerBoard.shotsfired[x][3] == 32) res = "Cruiser";
+                    if (playerBoard.shotsfired[x][3] == 31) res = "Submarine";
+                    if (playerBoard.shotsfired[x][3] == 2) res = "Destroyer";
+                    String res1 = "Not Available";
+                    if (playerBoard.shotsfired[x][2] == 0) res1 = "Not hit";
+                    if (playerBoard.shotsfired[x][2] == 1) res1 = "Hit";
+                    Label label1 = new Label("Player shots cell with x: " + playerBoard.shotsfired[x][0] + " and y: " + playerBoard.shotsfired[x][1] + " with result: " + res1 + " and ship type: " + res  );
+                    if (tempor == 0) pane1.getChildren().add(label1);
+                    if (tempor == 1) pane2.getChildren().add(label1);
+                    if (tempor == 2) pane3.getChildren().add(label1);
+                    if (tempor == 3) pane4.getChildren().add(label1);
+                    if (tempor == 4) pane5.getChildren().add(label1);
+                    tempor++;
                 }
 
                 root2.getChildren().add(label);
-                Scene secondScene = new Scene(pane, 500,500);
+                VBox vboxvag = new VBox(100, pane1,pane2,pane3,pane4,pane5);
+
+                Scene secondScene = new Scene(vboxvag, 500,500);
                 Stage newstage = new Stage();
                 Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-                newstage.setTitle("Pop Up Window Enemy Shots");
+                newstage.setTitle("Pop Up Window Player Shots");
                 newstage.setX(primaryScreenBounds.getMinX());
                 newstage.setY(primaryScreenBounds.getMinY());
                 newstage.setWidth(primaryScreenBounds.getWidth()-400);
@@ -314,8 +355,8 @@ public class Main extends Application {
             enemyTurn = cell.shoot();
             if (playerBoard.totalshots>40) enemyTurn = true;
             else enemyTurn=false;
-            System.out.println(playerBoard.totalshots);
-            System.out.println(enemyBoard.totalshots);
+            //System.out.println(playerBoard.totalshots);
+            //System.out.println(enemyBoard.totalshots);
 
             if (playerBoard.ships == 0 || (playerBoard.totalshots<=0 && enemyBoard.totalshots<=0 && playerBoard.points>enemyBoard.points) ) {
                 finished=true;

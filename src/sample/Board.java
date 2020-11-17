@@ -22,7 +22,6 @@ public class Board extends Parent{
     public int totalshots=40;
     public int points = 0;
     public int times = 0;
-    public boolean outside = false;
     IntegerProperty eships = new SimpleIntegerProperty(ships);
     IntegerProperty eshots = new SimpleIntegerProperty(shots);
     IntegerProperty etotalshots = new SimpleIntegerProperty(totalshots);
@@ -30,7 +29,9 @@ public class Board extends Parent{
 
     public int[][] places = new int[5][4];
     public String[][] states = new String[5][2];
-    public int[][] shotsfired = new int[50][4];
+    public int[][] shotsfired = new int[50][5];
+    public int myfcounter = 0;
+    IntegerProperty efcounter = new SimpleIntegerProperty(myfcounter);
     public int countshots = 0;
 
 
@@ -215,11 +216,13 @@ public class Board extends Parent{
             etotalshots.set(board.totalshots);
             setFill(Color.BLACK);
            // System.out.println(board);
-            board.shotsfired[countshots][0] = x;
-            board.shotsfired[countshots][1] = y;
-            board.shotsfired[countshots][2] = 0;
+            shotsfired[countshots][0] = x;
+            shotsfired[countshots][1] = y;
+            shotsfired[countshots][2] = 0;
+            myfcounter++;
+            efcounter.set(myfcounter);
             if (ship != null){
-                board.shotsfired[countshots][2]=1;
+                shotsfired[countshots][2]=1;
                 /*System.out.println(board + " hit something at x: " + x + " and y: " + y);
                 for(int i=0 ; i<=4 ; i++) {
                     System.out.println();
@@ -231,20 +234,20 @@ public class Board extends Parent{
                     board.points= board.points + 350;
                     states[0][1] = "Injured";
                     System.out.println("Scored 350 points");
-                    board.shotsfired[countshots][3]=5;
+                    shotsfired[countshots][3]=5;
                 }
                 if (board.places[1][1] ==  x && board.places[1][3] == 1 && board.places[1][2] <= y && board.places[1][2]+ 3 >= y ){
                     board.points= board.points + 250;
                     states[1][1] = "Injured";
                     System.out.println("Scored 250 points");
-                    board.shotsfired[countshots][3]=4;
+                    shotsfired[countshots][3]=4;
 
                 }
                 if (board.places[2][1] ==  x && board.places[2][3] == 1 && board.places[2][2] <= y && board.places[2][2]+ 2 >= y ){
                     board.points= board.points + 100;
                     states[2][1] = "Injured";
                     System.out.println("Scored 100 points");
-                    board.shotsfired[countshots][3]=32;
+                    shotsfired[countshots][3]=32;
 
 
                 }
@@ -252,7 +255,7 @@ public class Board extends Parent{
                     board.points= board.points + 100;
                     states[3][1] = "Injured";
                     System.out.println("Scored 100 points");
-                    board.shotsfired[countshots][3]=31;
+                    shotsfired[countshots][3]=31;
 
 
                 }
@@ -260,14 +263,14 @@ public class Board extends Parent{
                     board.points= board.points + 50;
                     states[4][1] = "Injured";
                     System.out.println("Scored 50 points");
-                    board.shotsfired[countshots][3]=2;
+                    shotsfired[countshots][3]=2;
 
                 }
                 if (board.places[0][2] ==  y && board.places[0][3] == 2 && board.places[0][1] <= x && board.places[0][1]+ 4 >= x ) {
                     board.points= board.points + 350;
                     states[0][1] = "Injured";
                     System.out.println("Scored 350 points");
-                    board.shotsfired[countshots][3]=5;
+                    shotsfired[countshots][3]=5;
 
 
                 }
@@ -275,7 +278,7 @@ public class Board extends Parent{
                     board.points= board.points + 250;
                     states[1][1] = "Injured";
                     System.out.println("Scored 250 points");
-                    board.shotsfired[countshots][3]=4;
+                    shotsfired[countshots][3]=4;
 
 
                 }
@@ -283,7 +286,7 @@ public class Board extends Parent{
                     board.points= board.points + 100;
                     states[2][1] = "Injured";
                     System.out.println("Scored 100 points");
-                    board.shotsfired[countshots][3]=32;
+                    shotsfired[countshots][3]=32;
 
 
                 }
@@ -291,7 +294,7 @@ public class Board extends Parent{
                     board.points= board.points + 100;
                     states[3][1] = "Injured";
                     System.out.println("Scored 100 points");
-                    board.shotsfired[countshots][3]=31;
+                    shotsfired[countshots][3]=31;
 
 
                 }
@@ -299,12 +302,11 @@ public class Board extends Parent{
                     board.points= board.points + 50;
                     states[4][1] = "Injured";
                     System.out.println("Scored 50 points");
-                    board.shotsfired[countshots][3]=2;
+                    shotsfired[countshots][3]=2;
 
 
                 }
                 epoints.set(board.points);
-                countshots++;
                 ship.hit();
                 shots++;
                 eshots.set(board.shots);
@@ -355,8 +357,10 @@ public class Board extends Parent{
                     epoints.set(board.points);
                     eships.set(board.ships);
                 }
+                countshots++;
                 return true;
             }
+            countshots++;
             return false;
         }
     }
