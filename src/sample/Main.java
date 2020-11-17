@@ -101,6 +101,70 @@ public class Main extends Application {
             }
         };
 
+        EventHandler<ActionEvent> event4 = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                StackPane root2 = new StackPane();
+                Label label = new Label("Your are now in the second form");
+
+                TilePane pane = new TilePane();
+                for (int x = 0; x < enemyBoard.shotsfired.length; x++){
+                    String res = "Not Available";
+                    if (enemyBoard.shotsfired[x][3] == 5) res = "Carrier";
+                    if (enemyBoard.shotsfired[x][3] == 4) res = "Battleship";
+                    if (enemyBoard.shotsfired[x][3] == 32) res = "Cruiser";
+                    if (enemyBoard.shotsfired[x][3] == 31) res = "Submarine";
+                    if (enemyBoard.shotsfired[x][3] == 2) res = "Destroyer";
+                    String res1 = "Not Available";
+                    if (enemyBoard.shotsfired[x][2] == 0) res1 = "Not hit";
+                    if (enemyBoard.shotsfired[x][2] == 1) res1 = "Hit";
+                    Label label1 = new Label("Player shots cell with x: " + enemyBoard.shotsfired[x][0] + " and y: " + enemyBoard.shotsfired[x][1] + " with result: " + res1 + " and ship type: " + res  );
+                    pane.getChildren().add(label1);
+                }
+
+                root2.getChildren().add(label);
+                Scene secondScene = new Scene(pane, 500,500);
+                Stage newstage = new Stage();
+                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+                newstage.setTitle("Pop Up Window Player Shots");
+                newstage.setX(primaryScreenBounds.getMinX());
+                newstage.setY(primaryScreenBounds.getMinY());
+                newstage.setWidth(primaryScreenBounds.getWidth()-400);
+                newstage.setHeight(primaryScreenBounds.getHeight()-100);
+                newstage.setScene(secondScene);
+                newstage.setResizable(false);
+                newstage.show();
+            }
+        };
+
+        EventHandler<ActionEvent> event5 = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                StackPane root2 = new StackPane();
+                Label label = new Label("Your are now in the second form");
+
+                TilePane pane = new TilePane();
+                for (int x = 0; x < playerBoard.states.length; x++){
+                    Label label1 = new Label(playerBoard.states[x][0] + " state is: " + playerBoard.states[x][1]);
+                    pane.getChildren().add(label1);
+                }
+
+                root2.getChildren().add(label);
+                Scene secondScene = new Scene(pane, 500,500);
+                Stage newstage = new Stage();
+                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+                newstage.setTitle("Pop Up Window Enemy Shots");
+                newstage.setX(primaryScreenBounds.getMinX());
+                newstage.setY(primaryScreenBounds.getMinY());
+                newstage.setWidth(primaryScreenBounds.getWidth()-400);
+                newstage.setHeight(primaryScreenBounds.getHeight()-100);
+                newstage.setScene(secondScene);
+                newstage.setResizable(false);
+                newstage.show();
+            }
+        };
+
+
         menuItem1.setOnAction(event1);
         menuItem3.setOnAction(event2);
 
@@ -122,6 +186,10 @@ public class Main extends Application {
         menu2.getItems().add(menuItem23);
 
         menuItem21.setOnAction(event3);
+        menuItem22.setOnAction(event4);
+        menuItem23.setOnAction(event5);
+
+
 
 
         menuBar.getMenus().add(menu1);
