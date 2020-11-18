@@ -53,6 +53,12 @@ public class Main extends Application {
     public int[][] entered = new int[1000][1000];
     public int[][] entered_computer = new int[1000][1000];
 
+    public int nextx = 0 ;
+    public int nexty = 0 ;
+    public int previousx = 0;
+    public int previousy = 0;
+    public int previous = 0;
+    public int consecutive = 0;
 
     StringProperty winner = new SimpleStringProperty();
 
@@ -256,7 +262,6 @@ public class Main extends Application {
         EventHandler<ActionEvent> event6 = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                menuItem1.setDisable(true);
                 menuItem2.setDisable(true);
 
                 FileChooser fileChooser = new FileChooser();
@@ -312,7 +317,6 @@ public class Main extends Application {
         EventHandler<ActionEvent> event7 = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                menuItem1.setDisable(true);
                 menuItem4.setDisable(true);
 
                 FileChooser fileChooser = new FileChooser();
@@ -445,6 +449,7 @@ public class Main extends Application {
             if (start==1 && loaded==0 ) {
                 menuItem1.setDisable(true);
                 menuItem2.setDisable(true);
+                menuItem4.setDisable(true);
                 if (playerBoard.placeShip(new Ship(shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
                     if (--shipsToPlace == 1) {
                         startGame();
@@ -455,7 +460,7 @@ public class Main extends Application {
                     }
                 }
             }
-            else {
+            else if (start==1) {
                 menuItem1.setDisable(true);
                 menuItem2.setDisable(true);
                 menuItem4.setDisable(true);
@@ -535,12 +540,54 @@ public class Main extends Application {
         while (enemyTurn && finished ==false) {
             int x = random.nextInt(10);
             int y = random.nextInt(10);
-
+            if (previous ==1 ){
+                x = nextx;
+                y = nexty;
+            }
             Cell cell = playerBoard.getCell(x, y);
-            if (cell.wasShot)
+            if (cell.wasShot){
+                previous = 0;
                 continue;
+            }
+
 
             enemyTurn = cell.shoot();
+            if (enemyTurn == true && consecutive < 5 ){
+                if (x-1 >= 0 ){
+                    consecutive++;
+                    previous = 1;
+                    nextx = x-1;
+                    nexty = y;
+                }
+                else if (x+1<10){
+                    consecutive++;
+                    previous =1;
+                    nextx= x+1;
+                    nexty = y;
+                }
+                else if (y+1>10){
+                    consecutive++;
+                    previous =1;
+                    nextx=x;
+                    nexty=y+1;
+                }
+                else if (y-1 >= 0){
+                    consecutive++;
+                    previous =1;
+                    nextx=x;
+                    nexty=y-1;
+                }
+                else {
+                    consecutive++;
+                    previous =1;
+                    nextx = random.nextInt(10);
+                    nexty = random.nextInt(10);
+                }
+            }
+            else {
+                consecutive =0;
+                previous = 0;
+            }
             if (playerBoard.totalshots>40) enemyTurn = true;
             else enemyTurn=false;
             //System.out.println(playerBoard.totalshots);
