@@ -38,13 +38,21 @@ public class Main extends Application {
     private Board enemyBoard, playerBoard;
     public boolean finished = false;
     private int shipsToPlace = 5;
+    private int shipsToPlace_computer = 5;
+
     public int twice2=0;
+    public int twice2_computer=0;
+
     public int start=0;
     public String thetext= " ";
     public int loaded=0;
+    public int loaded_computer=0;
+
     public int first = 0;
     private boolean enemyTurn= true;
     public int[][] entered = new int[1000][1000];
+    public int[][] entered_computer = new int[1000][1000];
+
 
     StringProperty winner = new SimpleStringProperty();
 
@@ -87,12 +95,14 @@ public class Main extends Application {
 
         Menu menu1 = new Menu("APPLICATION");
         MenuItem menuItem1 = new MenuItem("START");
-        MenuItem menuItem2 = new MenuItem("LOAD");
+        MenuItem menuItem2 = new MenuItem("LOAD PLAYER");
+        MenuItem menuItem4 = new MenuItem("LOAD COMPUTER");
         MenuItem menuItem3 = new MenuItem("EXIT");
 
 
         menu1.getItems().add(menuItem1);
         menu1.getItems().add(menuItem2);
+        menu1.getItems().add(menuItem4);
         menu1.getItems().add(menuItem3);
 
         EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() {
@@ -202,7 +212,7 @@ public class Main extends Application {
                 int tempor = 0;
 
                 int st=0;
-                System.out.println(playerBoard.efcounter.get());
+                //System.out.println(playerBoard.efcounter.get());
                 if (playerBoard.efcounter.get() < 5 ) st = 0;
                 else st= playerBoard.efcounter.get();
                 for (int x = st; x < playerBoard.efcounter.get(); x++){
@@ -245,6 +255,8 @@ public class Main extends Application {
             public void handle(ActionEvent e)
             {
                 menuItem1.setDisable(true);
+                menuItem2.setDisable(true);
+
                 FileChooser fileChooser = new FileChooser();
 
                 //Set extension filter
@@ -283,19 +295,76 @@ public class Main extends Application {
                         }
                         j++;
                     }
-                    for(int t = 0 ; t <5 ; t++){
+                    /* for(int t = 0 ; t <5 ; t++){
                         for(int m = 0 ; m<4 ; m++){
                             System.out.print(entered[t][m]);
                             System.out.print(",");
                         }
                         System.out.println();
+                    } */
+                }
+
+            }
+        };
+
+        EventHandler<ActionEvent> event7 = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                menuItem1.setDisable(true);
+                menuItem4.setDisable(true);
+
+                FileChooser fileChooser = new FileChooser();
+
+                //Set extension filter
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                fileChooser.getExtensionFilters().add(extFilter);
+
+                //Show save file dialog
+                File file = fileChooser.showOpenDialog(null);
+                TextArea textArea  = new TextArea();
+                if(file != null){
+                    loaded_computer = 1;
+                    thetext = readFile(file);
+                    String[] splitted =  thetext.split("[,]",0);
+                    int temp;
+                    int counts=0,i=0,j=0;
+                    while(j<splitted.length){
+                        int temporary  = Integer.parseInt(splitted[j]);
+                        if (temporary<=9) {
+                            entered_computer[counts][i] = temporary;
+                            i++;
+                            if (i >=3 && i % 4 == 0 ){
+                                i=0;
+                                counts++;
+                            }
+                        }
+                        else {
+                            int next = temporary % 10;
+                            int prev = temporary/10;
+
+                            entered_computer[counts][i] = prev;
+                            counts++;
+                            i=0;
+
+                            entered_computer[counts][i] = next;
+                            i++;
+                        }
+                        j++;
                     }
+                 /*   for(int t = 0 ; t <5 ; t++){
+                        for(int m = 0 ; m<4 ; m++){
+                            System.out.print(entered_computer[t][m]);
+                            System.out.print(",");
+                        }
+                        System.out.println();
+                    } */
                 }
 
             }
         };
         menuItem1.setOnAction(event1);
         menuItem2.setOnAction(event6);
+        menuItem4.setOnAction(event7);
         menuItem3.setOnAction(event2);
 
 
@@ -381,8 +450,9 @@ public class Main extends Application {
             else {
                 menuItem1.setDisable(true);
                 menuItem2.setDisable(true);
+                menuItem4.setDisable(true);
                 for (int i=0 ; i<5 ; i++){
-                    System.out.println(i);
+                    //System.out.println(i);
                     boolean orient = true;
                     if (entered[i][3] == 1 ) orient = false;
                     if (playerBoard.placeShip(new Ship(shipsToPlace, orient), entered[i][1], entered[i][2])) {
@@ -484,13 +554,30 @@ public class Main extends Application {
         // place enemy ships
         int type = 5;
         int twice = 0;
-        while (type > 1) {
+        while (type > 1 && loaded_computer==0) {
             int x = random.nextInt(10);
             int y = random.nextInt(10);
 
-            if (enemyBoard.placeShip(new Ship(type, Math.random() < 0.5), x, y)) {
+            if (enemyBoard.placeShip(new Ship(type, Math.random() < 0.5), x, y) && loaded_computer==0) {
+                //System.out.print("Hi");
                 if (type == 3 && twice == 0) twice++;
                 else type--;
+            }
+        }
+        if (loaded_computer==1) {
+           // System.out.print("loaded: " + loaded_computer);
+
+            for (int i = 0; i < 5; i++) {
+                boolean orient = true;
+                if (entered_computer[i][3] == 1) orient = false;
+                if (enemyBoard.placeShip(new Ship(shipsToPlace_computer, orient), entered_computer[i][1], entered_computer[i][2])) {
+                    if (--shipsToPlace_computer == 1) {
+                    }
+                    if (shipsToPlace_computer == 2 && twice2_computer == 0) {
+                        shipsToPlace_computer = 3;
+                        twice2_computer++;
+                    }
+                }
             }
         }
         //System.out.println("Player board name: " + playerBoard);
