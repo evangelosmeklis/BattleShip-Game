@@ -160,9 +160,10 @@ public class Main extends Application {
                 int tempor = 0;
 
                 int st=0;
+                System.out.println(playerBoard.efcounter.get());
                 if (playerBoard.efcounter.get() < 5 ) st = 0;
                 else st= playerBoard.efcounter.get();
-                for (int x = st; x < enemyBoard.efcounter.get(); x++){
+                for (int x = st-5 ; x <= st; x++){
                         String res = "Not Available";
                         if (enemyBoard.shotsfired[x][3] == 5) res = "Carrier";
                         if (enemyBoard.shotsfired[x][3] == 4) res = "Battleship";
@@ -215,7 +216,7 @@ public class Main extends Application {
                 //System.out.println(playerBoard.efcounter.get());
                 if (playerBoard.efcounter.get() < 5 ) st = 0;
                 else st= playerBoard.efcounter.get();
-                for (int x = st; x < playerBoard.efcounter.get(); x++){
+                for (int x = st-5; x <= st; x++){
                     String res = "Not Available";
                     if (playerBoard.shotsfired[x][3] == 5) res = "Carrier";
                     if (playerBoard.shotsfired[x][3] == 4) res = "Battleship";
