@@ -1,6 +1,9 @@
 package sample;
 
+import java.io.*;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
@@ -23,6 +26,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -36,13 +40,44 @@ public class Main extends Application {
     private int shipsToPlace = 5;
     public int twice2=0;
     public int start=0;
+    public String thetext= " ";
+    public int loaded=0;
     public int first = 0;
     private boolean enemyTurn= true;
+    public int[][] entered = new int[1000][1000];
 
     StringProperty winner = new SimpleStringProperty();
 
 
     private Random random = new Random();
+
+    private String readFile(File file){
+        StringBuilder stringBuffer = new StringBuilder();
+        BufferedReader bufferedReader = null;
+
+        try {
+
+            bufferedReader = new BufferedReader(new FileReader(file));
+
+            String text;
+            while ((text = bufferedReader.readLine()) != null) {
+                stringBuffer.append(text);
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return stringBuffer.toString();
+    }
 
     private Parent createContent() {
         BorderPane root = new BorderPane();
@@ -167,6 +202,7 @@ public class Main extends Application {
                 int tempor = 0;
 
                 int st=0;
+                System.out.println(playerBoard.efcounter.get());
                 if (playerBoard.efcounter.get() < 5 ) st = 0;
                 else st= playerBoard.efcounter.get();
                 for (int x = st; x < playerBoard.efcounter.get(); x++){
@@ -205,8 +241,61 @@ public class Main extends Application {
             }
         };
 
+        EventHandler<ActionEvent> event6 = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                menuItem1.setDisable(true);
+                FileChooser fileChooser = new FileChooser();
 
+                //Set extension filter
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                fileChooser.getExtensionFilters().add(extFilter);
+
+                //Show save file dialog
+                File file = fileChooser.showOpenDialog(null);
+                TextArea textArea  = new TextArea();
+                if(file != null){
+                    loaded = 1;
+                    thetext = readFile(file);
+                    String[] splitted =  thetext.split("[,]",0);
+                    int temp;
+                    int counts=0,i=0,j=0;
+                    while(j<splitted.length){
+                        int temporary  = Integer.parseInt(splitted[j]);
+                        if (temporary<=9) {
+                            entered[counts][i] = temporary;
+                            i++;
+                            if (i >=3 && i % 4 == 0 ){
+                                i=0;
+                                counts++;
+                            }
+                        }
+                        else {
+                            int next = temporary % 10;
+                            int prev = temporary/10;
+
+                            entered[counts][i] = prev;
+                            counts++;
+                            i=0;
+
+                            entered[counts][i] = next;
+                            i++;
+                        }
+                        j++;
+                    }
+                    for(int t = 0 ; t <5 ; t++){
+                        for(int m = 0 ; m<4 ; m++){
+                            System.out.print(entered[t][m]);
+                            System.out.print(",");
+                        }
+                        System.out.println();
+                    }
+                }
+
+            }
+        };
         menuItem1.setOnAction(event1);
+        menuItem2.setOnAction(event6);
         menuItem3.setOnAction(event2);
 
 
@@ -276,7 +365,9 @@ public class Main extends Application {
                 return;
 
             Cell cell = (Cell) event.getSource();
-            if (start==1) {
+            if (start==1 && loaded==0 ) {
+                menuItem1.setDisable(true);
+                menuItem2.setDisable(true);
                 if (playerBoard.placeShip(new Ship(shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
                     if (--shipsToPlace == 1) {
                         startGame();
@@ -286,6 +377,25 @@ public class Main extends Application {
                         twice2++;
                     }
                 }
+            }
+            else {
+                menuItem1.setDisable(true);
+                menuItem2.setDisable(true);
+                for (int i=0 ; i<5 ; i++){
+                    System.out.println(i);
+                    boolean orient = true;
+                    if (entered[i][3] == 1 ) orient = false;
+                    if (playerBoard.placeShip(new Ship(shipsToPlace, orient), entered[i][1], entered[i][2])) {
+                        if (--shipsToPlace == 1) {
+                            startGame();
+                        }
+                        if (shipsToPlace == 2 && twice2 == 0) {
+                            shipsToPlace = 3;
+                            twice2++;
+                        }
+                    }
+                }
+
             }
         });
         Label label1 = new Label("Player Points: ");
@@ -332,7 +442,6 @@ public class Main extends Application {
         vbox4.setAlignment(Pos.CENTER_LEFT);
         Label labelwin = new Label();
         labelwin.textProperty().bind(winner);
-
 
         root.setTop(vbox1);
         root.setRight(vbox2);
