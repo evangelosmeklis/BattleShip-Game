@@ -29,7 +29,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
+import javafx.scene.control.skin.ContextMenuSkin;
 import sample.Board.Cell;
 
 public class Main extends Application {
@@ -90,6 +90,7 @@ public class Main extends Application {
     private Parent createContent() {
         BorderPane root = new BorderPane();
         root.setPrefSize(600, 800);
+        root.setId("pane");
 
 
 
@@ -390,8 +391,14 @@ public class Main extends Application {
         menuItem23.setOnAction(event5);
 
 
+        menuItem1.setId("menu-item");
+        menuItem2.setId("menu-item");
+        menuItem21.setId("menu-item");
+        menuItem22.setId("menu-item");
+        menuItem23.setId("menu-item");
+        menuItem3.setId("menu-item");
 
-
+        menuBar.setId("menu-bar");
         menuBar.getMenus().add(menu1);
         menuBar.getMenus().add(menu2);
 
@@ -505,6 +512,7 @@ public class Main extends Application {
         Label labelpltotalshots = new Label();
         labelpltotalshots.textProperty().bind(enemyBoard.etotalshots.asString());
         ToolBar toolBar3 = new ToolBar(labelpl,labelpltotalshots);
+        toolBar3.setId("toolbar");
         VBox vbox3 = new VBox(0,toolBar3, playerBoard);
         vbox3.setAlignment(Pos.CENTER_LEFT);
 
@@ -600,7 +608,7 @@ public class Main extends Application {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         //set Stage boundaries to visible bounds of the main screen
-
+        scene.getStylesheets().addAll(this.getClass().getResource("/resources/style.css").toExternalForm());
         primaryStage.setX(primaryScreenBounds.getMinX());
         primaryStage.setY(primaryScreenBounds.getMinY());
         primaryStage.setWidth(primaryScreenBounds.getWidth()-400);

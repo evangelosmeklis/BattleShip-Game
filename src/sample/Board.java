@@ -91,8 +91,9 @@ public class Board extends Parent{
                     Cell cell = getCell(x, i);
                     cell.ship = ship;
                     if (!enemy) {
-                        cell.setFill(Color.WHITE);
-                        cell.setStroke(Color.GREEN);
+                        Color a = Color.web("rgba(30,144,255,0.8)");
+                        cell.setFill(a);
+                        cell.setStroke(a);
                     }
                 }
             }
@@ -101,8 +102,9 @@ public class Board extends Parent{
                     Cell cell = getCell(i, y);
                     cell.ship = ship;
                     if (!enemy) {
-                        cell.setFill(Color.WHITE);
-                        cell.setStroke(Color.GREEN);
+                        Color a = Color.web("rgba(30,144,255,0.8)");
+                        cell.setFill(a);
+                        cell.setStroke(a);
                     }
                 }
             }
@@ -206,15 +208,17 @@ public class Board extends Parent{
             this.x=x;
             this.y=y;
             this.board=board;
-            setFill(Color.LIGHTGRAY);
-            setStroke(Color.BLACK);
+            Color b = Color.web("rgba(211,211,211,0.8)");
+            setFill(b);
+            Color c = Color.web("rgba(135,206,250,0.8)");
+            setStroke(c);
         }
 
         public boolean shoot(){
             wasShot=true;
             board.totalshots--;
             etotalshots.set(board.totalshots);
-            setFill(Color.BLACK);
+            setFill(Color.DARKBLUE);
            // System.out.println(board);
             shotsfired[countshots][0] = x;
             shotsfired[countshots][1] = y;
@@ -310,7 +314,9 @@ public class Board extends Parent{
                 ship.hit();
                 shots++;
                 eshots.set(board.shots);
-                setFill(Color.RED);
+                Color t = Color.web("rgba(236,89,89,0.8)");
+                setFill(t);
+                setStroke(Color.RED);
                 if (!ship.isAlive()){
                     if (board.places[2][1] ==  x && board.places[2][3] == 1 && board.places[2][2] <= y && board.places[2][2]+ 2 >= y ){
                         board.points= board.points + 250;
