@@ -65,7 +65,7 @@ public class Main extends Application {
     public int firsttime=0;
     public int startingx=0;
     public int startingy =0;
-
+    boolean alive= false;
     StringProperty winner = new SimpleStringProperty();
 
 
@@ -555,11 +555,16 @@ public class Main extends Application {
                 continue;
             }
 
-            boolean alive= false;
+
             enemyTurn = cell.shoot();
             if (enemyTurn){
+                System.out.println("unauthorized access");
                 alive = cell.alive();
             }
+            System.out.println(firsttime);
+            System.out.println(previous);
+            System.out.println(enemyTurn);
+            System.out.println(alive);
             if (enemyTurn && firsttime==0 && alive ){
                 startingx= x;
                 startingy = y;
@@ -638,18 +643,19 @@ public class Main extends Application {
                     }
                 }
             }
-            else if (!enemyTurn && firsttime==1){
+            else if (!enemyTurn && firsttime==1 && alive){
+                System.out.println("Should behere");
                 if (previous ==1 && startingx + 1 <10){
                     previous = 2;
                     nextx = startingx + 1;
                     nexty = y;
                 }
-                else if (previous ==2 && startingx-1>=0){
-                    previous =1;
-                    nextx= startingx-1;
-                    nexty = y;
+                else if (previous ==2 && startingy-1>=0){
+                    previous = 4 ;
+                    nextx= startingx;
+                    nexty = startingy - 1;
                 }
-                else if (previous ==3 && startingy-1>=0 ){
+                else if (previous ==3 && startingy-1>=0){
                     previous =4;
                     nextx=startingx;
                     nexty=startingy-1;
