@@ -214,6 +214,13 @@ public class Board extends Parent{
             setStroke(c);
         }
 
+        public boolean alive(){
+            if (ship != null){
+                return ship.isAlive();
+            }
+            else return false;
+        }
+
         public boolean shoot(){
             wasShot=true;
             board.totalshots--;

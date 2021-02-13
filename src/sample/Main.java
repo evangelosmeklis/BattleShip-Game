@@ -1,7 +1,10 @@
 package sample;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,7 +61,10 @@ public class Main extends Application {
     public int previousx = 0;
     public int previousy = 0;
     public int previous = 0;
-    public int consecutive = 0;
+
+    public int firsttime=0;
+    public int startingx=0;
+    public int startingy =0;
 
     StringProperty winner = new SimpleStringProperty();
 
@@ -417,14 +423,13 @@ public class Main extends Application {
             if (first == 0 && (int)Math.round(Math.random()) ==0){
                 first++;
             }
-            if (first > 0 && finished == false) {
+            if (first > 0 && !finished) {
                 Cell cell = (Cell) event.getSource();
                 if (cell.wasShot)
                     return;
 
                 enemyTurn = !cell.shoot();
-                if (enemyBoard.totalshots>40) enemyTurn = false;
-                else enemyTurn = true;
+                enemyTurn = enemyBoard.totalshots <= 40;
 
                 if (enemyBoard.ships == 0 || (playerBoard.totalshots<=0 && enemyBoard.totalshots<=0 && playerBoard.points<enemyBoard.points)) {
                     finished = true;
@@ -481,10 +486,10 @@ public class Main extends Application {
 
             }
         });
-        Label label1 = new Label("Player Points: ");
+        Label label1 = new Label("Pl Points: ");
         Label label11 = new Label();
         label11.textProperty().bind(enemyBoard.epoints.asString());
-        Label label2 = new Label("Computer Points: ");
+        Label label2 = new Label("Comp Points: ");
         Label label21 = new Label();
         label21.textProperty().bind(playerBoard.epoints.asString());
         Label label3 = new Label("Player Ships Available: ");
@@ -537,10 +542,10 @@ public class Main extends Application {
 
     private void enemyMove() {
         first++;
-        while (enemyTurn && finished ==false) {
+        while (enemyTurn && !finished) {
             int x = random.nextInt(10);
             int y = random.nextInt(10);
-            if (previous ==1 ){
+            if (previous ==1 || previous ==2 || previous==3 || previous ==4 ){
                 x = nextx;
                 y = nexty;
             }
@@ -550,46 +555,121 @@ public class Main extends Application {
                 continue;
             }
 
-
+            boolean alive= false;
             enemyTurn = cell.shoot();
-            if (enemyTurn == true && consecutive < 5 ){
-                if (x-1 >= 0 ){
-                    consecutive++;
+            if (enemyTurn){
+                alive = cell.alive();
+            }
+            if (enemyTurn && firsttime==0 && alive ){
+                startingx= x;
+                startingy = y;
+                firsttime=1;
+                if (x-1 >= 0){
                     previous = 1;
                     nextx = x-1;
                     nexty = y;
                 }
-                else if (x+1<10){
-                    consecutive++;
-                    previous =1;
+                else if (x+1<10 ){
+                    previous =2;
                     nextx= x+1;
                     nexty = y;
                 }
-                else if (y+1>10){
-                    consecutive++;
-                    previous =1;
+                else if (y+1<10 ){
+                    previous =3;
                     nextx=x;
                     nexty=y+1;
                 }
                 else if (y-1 >= 0){
-                    consecutive++;
-                    previous =1;
+                    previous =4;
                     nextx=x;
                     nexty=y-1;
                 }
                 else {
-                    consecutive++;
                     previous =1;
                     nextx = random.nextInt(10);
                     nexty = random.nextInt(10);
                 }
             }
+            else if (enemyTurn && firsttime ==1 && alive){
+                if (previous==1 && x-1>=0) {
+                    previous = 1;
+                    nextx = x-1;
+                    nexty = y;
+                }
+                else if (previous ==2 && x+1<10){
+                    previous =2;
+                    nextx= x+1;
+                    nexty = y;
+                }
+                else if (previous ==3 && y+1<10 ){
+                    previous =3;
+                    nextx=x;
+                    nexty=y+1;
+                }
+                else if (previous ==4 && y-1>=0){
+                    previous =4;
+                    nextx=x;
+                    nexty=y-1;
+                }
+                else {
+                    if (previous ==1 && startingx + 1 <10){
+                        previous = 2;
+                        nextx = startingx + 1;
+                        nexty = y;
+                    }
+                    else if (previous ==2 && startingx-1>=0){
+                        previous =1;
+                        nextx= startingx-1;
+                        nexty = y;
+                    }
+                    else if (previous ==3 && startingy-1>=0 ){
+                        previous =4;
+                        nextx=startingx;
+                        nexty=startingy-1;
+                    }
+                    else if (previous ==4 && startingy+1<10){
+                        previous =3;
+                        nextx=startingx;
+                        nexty=startingy+1;
+                    }
+                    else {
+                        nextx = random.nextInt(10);
+                        nexty = random.nextInt(10);
+                    }
+                }
+            }
+            else if (!enemyTurn && firsttime==1){
+                if (previous ==1 && startingx + 1 <10){
+                    previous = 2;
+                    nextx = startingx + 1;
+                    nexty = y;
+                }
+                else if (previous ==2 && startingx-1>=0){
+                    previous =1;
+                    nextx= startingx-1;
+                    nexty = y;
+                }
+                else if (previous ==3 && startingy-1>=0 ){
+                    previous =4;
+                    nextx=startingx;
+                    nexty=startingy-1;
+                }
+                else if (previous ==4 && startingy+1<10){
+                    previous =3;
+                    nextx=startingx;
+                    nexty=startingy+1;
+                }
+                else {
+                    nextx = random.nextInt(10);
+                    nexty = random.nextInt(10);
+                }
+            }
             else {
-                consecutive =0;
+                firsttime=0;
                 previous = 0;
             }
-            if (playerBoard.totalshots>40) enemyTurn = true;
-            else enemyTurn=false;
+
+            enemyTurn = playerBoard.totalshots > 40;
             //System.out.println(playerBoard.totalshots);
             //System.out.println(enemyBoard.totalshots);
 
